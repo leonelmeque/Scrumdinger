@@ -4,6 +4,7 @@ struct MeetingHeaderView: View {
     let secondsElapsed: Int
     let secondsRemaining: Int
     let theme: Theme
+    @StateObject var scrumTimer = ScrumTimer()
     
     private var totalSeconds: Int {
         secondsElapsed + secondsRemaining
@@ -14,15 +15,20 @@ struct MeetingHeaderView: View {
         return Double(secondsElapsed) / Double(totalSeconds)
     }
     
-    private var minutesRemaining: Int {
-        secondsRemaining / 60
+    // investigate how can we use this
+    private var stopProgress: Void {
+        if secondsRemaining == 0 {
+            scrumTimer.stopScrum()
+        }
     }
     
-    
+    private var minutesRemaining: Int {
+         secondsRemaining / 60
+    }
     
     var body: some View {
         VStack {
-            ProgressView(value: 5, total: 15)
+            ProgressView(value: progress)
                 .progressViewStyle(ScrumProgressViewStyle(theme: theme))
             HStack {
                 VStack(alignment: .leading) {
